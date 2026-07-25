@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // ✅ MUST use S3 website endpoint (not REST)
-const BASE_PATH = 'http://cloudkit-outputs.s3-website.ap-south-1.amazonaws.com/__outputs';
+const BASE_PATH = 'https://cloudkit-deployments.s3.ap-south-1.amazonaws.com/__outputs';
 
 const proxy = httpProxy.createProxyServer({
     changeOrigin: true,
