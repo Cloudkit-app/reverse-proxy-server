@@ -5,29 +5,29 @@ import httpProxy from "http-proxy"
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// ✅ MUST use S3 website endpoint (not REST)
+//MUST use S3 website endpoint (not REST)
 const BASE_PATH = 'https://cloudkit-deployments.s3.ap-south-1.amazonaws.com/__outputs';
 
 const proxy = httpProxy.createProxyServer({
     changeOrigin: true,
 });
 
-// 🔥 Main middleware
+//Main middleware
 app.use((req, res) => {
     try {
         const hostname = req.hostname;
 
-        // 👉 Extract subdomain
+        // Extract subdomain
         const subdomain = hostname.split('.')[0];
 
-        // 👉 Example: abc.domain.com → /__outputs/abc
+        // Example: abc.domain.com → /__outputs/abc
         const target = `${BASE_PATH}/${subdomain}`;
 
-        // 👉 Detect if request is for a file (has extension)
+        // Detect if request is for a file (has extension)
         const ext = path.extname(req.url);
 
         if (!ext) {
-            // ✅ SPA route → always serve index.html
+            // SPA route → always serve index.html
             req.url = '/index.html';
         }
 
@@ -39,7 +39,7 @@ app.use((req, res) => {
     }
 });
 
-// ❌ Handle proxy errors properly
+// Handle proxy errors properly
 proxy.on('error', (err, req, res) => {
     console.error('Proxy Error:', err.message);
 
@@ -52,11 +52,11 @@ proxy.on('error', (err, req, res) => {
     res.end('Bad Gateway: Unable to reach origin');
 });
 
-// 🟢 Health check (optional but useful)
+// Health check (optional but useful)
 app.get('/_health', (req, res) => {
     res.send('OK');
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Reverse Proxy running on http://localhost:${PORT}`);
+    console.log(`Reverse Proxy running on http://localhost:${PORT}`);
 });
